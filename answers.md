@@ -9,3 +9,12 @@
 **Q4.** Duplicate transactions are prevented in two ways. First, the `transactions` table defines `transaction_id` as a `PRIMARY KEY`, enforcing uniqueness at the database level. Second, the `store_data` function fetches all existing `transaction_id` values before inserting and filters them out — so only records with new IDs are inserted.
 
 **Q5.** The JSON output contains two nested objects per transaction: `customer` and `metadata`. The `customer` object contains `customer_id`, `name`, and `email`. The `metadata` object contains `ip_address`, `device`, and `location`.
+
+# TASK 2: Add a Data Processing Feature.
+
+[ANS](/454878.jpeg)
+
+
+# Task 3: Write Tests
+
+[aNS](/WhatsApp%20Image%202026-02-25%20at%2015.47.53.jpeg)
