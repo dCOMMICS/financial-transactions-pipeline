@@ -197,3 +197,41 @@ def process_multiple_files(file_paths: List[str], incremental: bool = True) -> p
     
     logger.info(f"Processed {len(file_paths)} files, resulting in {len(combined_df)} unique records")
     return combined_df
+
+
+
+#  added code for
+
+def get_processing_stats(df: pl.DataFrame) -> dict:
+    """Get statistics about the processed data"""
+    if df.is_empty():
+        return {
+            "total_records": 0,
+            "unique_customers": 0,
+            "transactions_by_type": {},
+            "transactions_by_status": {},
+            "amount_stats": {"min": 0.0, "max": 0.0, "mean": 0.0},
+        }
+
+    transactions_by_type = (
+        df.group_by("transaction_type")
+        .agg(pl.len().alias("count"))
+        .to_dicts()
+    )
+    transactions_by_status = (
+        df.group_by("status")
+        .agg(pl.len().alias("count"))
+        .to_dicts()
+    )
+
+    return {
+        "total_records": len(df),
+        "unique_customers": df["customer_id"].n_unique(),
+        "transactions_by_type": {str(r["transaction_type"]): r["count"] for r in transactions_by_type},
+        "transactions_by_status": {str(r["status"]): r["count"] for r in transactions_by_status},
+        "amount_stats": {
+            "min": float(df["amount"].min()),
+            "max": float(df["amount"].max()),
+            "mean": round(float(df["amount"].mean()), 2),
+        },
+    }

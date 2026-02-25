@@ -21,7 +21,7 @@ class CustomerModel(BaseModel):
     name: str
     email: str  
 
-class MetadataModel(BaseModel):
+class MetadataModel(BaseModel): # MetadataModel answers question 1
     ip_address: Optional[str] = None
     device: Optional[str] = None
     location: Optional[str] = None

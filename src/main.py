@@ -1,3 +1,4 @@
+import polars as pl
 import os
 import logging
 import argparse
@@ -8,6 +9,10 @@ from .data_generator import generate_transaction_data
 from .sftp_client import get_mock_sftp_client
 from .data_processor import process_multiple_files
 from .db import DuckDBHandler
+
+# ADDED IMPORTS FROM CRAIG
+from .data_processor import process_multiple_files
+from .data_processor import process_multiple_files, get_processing_stats
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -29,12 +34,17 @@ def run_pipeline(data_dir="data", process_dir="data/processed", archive_dir="dat
             logger.warning("No files downloaded from SFTP")
             return
         
+        # THIS TO BE CHANGED.
+        
         logger.info(f"Processing {len(files)} downloaded files...")
         processed_data = process_multiple_files(files, incremental=incremental)
         
         if processed_data.is_empty():
             logger.warning("No valid data after processing")
             return
+        
+        stats = get_processing_stats(processed_data)
+        logger.info(f"Processing stats: {stats}")
         
         logger.info("Storing processed data in DuckDB...")
         db = DuckDBHandler()
